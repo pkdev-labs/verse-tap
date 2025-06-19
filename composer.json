@@ -10,7 +10,9 @@
   },
   "require": {
     "php": "^8.2",
-    "ext-openssl": "*"
+    "ext-openssl": "*",
+    "pkdev/traits": "^1.1",
+    "guzzlehttp/guzzle": "^7.9"
   },
   "require-dev": {
     "phpunit/phpunit": "^10.5"
@@ -30,11 +32,11 @@
   "repositories": [
     {
       "type": "vcs",
-      "url": "https://github.com/pkdev-labs/pkdev-traits"
+      "url": "https://github.com/pkdev-labs/verse-cli"
     }
   ],
   "support": {
-    "issues": "https://github.com/pkdev-labs/pkdev-traits/issues",
-    "source": "https://github.com/pkdev-labs/pkdev-traits"
+    "issues": "https://github.com/pkdev-labs/verse-cli/issues",
+    "source": "https://github.com/pkdev-labs/verse-cli"
   }
 }
