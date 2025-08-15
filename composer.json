@@ -1,5 +1,5 @@
 {
-  "name": "pkdev/verse-client",
+  "name": "pkdev/verse-tap",
   "description": "Bible Verse Client developed by PkDev",
   "type": "library",
   "license": "MIT",
