@@ -1,8 +1,9 @@
 {
   "name": "pkdev/verse-client",
   "description": "Bible Verse Client developed by PkDev",
-  "version": "1.0.0",
   "type": "library",
+  "license": "MIT",
+  "keywords": ["bible", "verse"],
   "autoload": {
     "psr-4": {
       "PkDev\\VerseClient\\": "src/"
@@ -17,7 +18,6 @@
   "require-dev": {
     "phpunit/phpunit": "^10.5"
   },
-  "license": "MIT",
   "autoload-dev": {
     "psr-4": {
       "PkDev\\VerseClient\\Tests\\": "tests/"
@@ -27,16 +27,9 @@
     "test": "vendor/bin/phpunit tests",
     "test-coverage": "vendor/bin/phpunit tests --coverage-html coverage"
   },
-  "keywords": ["bible", "verse"],
   "minimum-stability": "stable",
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/pkdev-labs/verse-cli"
-    }
-  ],
   "support": {
-    "issues": "https://github.com/pkdev-labs/verse-cli/issues",
-    "source": "https://github.com/pkdev-labs/verse-cli"
+    "issues": "https://github.com/pkdev-labs/verse-client/issues",
+    "source": "https://github.com/pkdev-labs/verse-client"
   }
 }
