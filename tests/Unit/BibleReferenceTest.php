@@ -2,6 +2,7 @@
 
 namespace PkDev\VerseClient\Tests\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use PkDev\VerseClient\Exceptions\VerseFetchException;
 use PkDev\VerseClient\Support\BibleReference;
@@ -28,9 +29,7 @@ class BibleReferenceTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider references
-     */
+    #[DataProvider('references')]
     public function test_it_resolves_references_to_api_bible_ids(string $reference, string $expectedId, bool $isChapter): void
     {
         $result = BibleReference::toApiId($reference);
