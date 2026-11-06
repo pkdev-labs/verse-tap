@@ -12,7 +12,7 @@ use PkDev\VerseClient\Exceptions\VerseFetchException;
 class BibleReference
 {
     /**
-     * Normalised book name (lowercase, alphanumerics only, numeral prefix as a
+     * Normalized book name (lowercase, alphanumerics only, numeral prefix as a
      * digit) → USFM code. Common abbreviations are included.
      *
      * @var array<string, string>
@@ -149,7 +149,7 @@ class BibleReference
     }
 
     /**
-     * @throws VerseFetchException when the book name isn't recognised
+     * @throws VerseFetchException when the book name isn't recognized
      */
     private static function resolveBook(string $book): string
     {
