@@ -89,6 +89,13 @@ class BibleReference
     ];
 
     /**
+     * Books with one chapter, cited by verse alone ("Jude 3").
+     *
+     * @var list<string>
+     */
+    private const SINGLE_CHAPTER_BOOKS = ['OBA', 'PHM', '2JN', '3JN', 'JUD'];
+
+    /**
      * Parse a reference into its components.
      *
      * @return array{book: string, chapter: int, verseStart: ?int, endChapter: ?int, verseEnd: ?int, isChapter: bool}
@@ -109,13 +116,22 @@ class BibleReference
         $endChapter = isset($m[4]) && $m[4] !== '' ? (int) $m[4] : null;
         $verseEnd = isset($m[5]) ? (int) $m[5] : null;
 
+        if ($verseStart === null && $endChapter === null) {
+            // A lone 1 in a single-chapter book stays chapter 1, so "Jude 1" is the whole book.
+            if (in_array($book, self::SINGLE_CHAPTER_BOOKS, true) && ($chapter > 1 || $verseEnd !== null)) {
+                [$verseStart, $chapter] = [$chapter, 1];
+            } elseif ($verseEnd !== null) {
+                [$endChapter, $verseEnd] = [$verseEnd, null];
+            }
+        }
+
         return [
             'book' => $book,
             'chapter' => $chapter,
             'verseStart' => $verseStart,
             'endChapter' => $endChapter,
             'verseEnd' => $verseEnd,
-            'isChapter' => $verseStart === null,
+            'isChapter' => $verseStart === null && $endChapter === null,
         ];
     }
 
@@ -136,7 +152,11 @@ class BibleReference
             return ['id' => "{$book}.{$p['chapter']}", 'isChapter' => true];
         }
 
-        $start = "{$book}.{$p['chapter']}.{$p['verseStart']}";
+        if ($p['verseStart'] === null && $p['verseEnd'] === null) {
+            throw new VerseFetchException("Chapter ranges are not supported: {$reference}");
+        }
+
+        $start = "{$book}.{$p['chapter']}.".($p['verseStart'] ?? 1);
 
         if ($p['verseEnd'] === null) {
             return ['id' => $start, 'isChapter' => false];
