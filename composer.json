@@ -12,7 +12,6 @@
   "require": {
     "php": "^8.3",
     "ext-openssl": "*",
-    "pkdev/traits": "^2.0",
     "guzzlehttp/guzzle": "^7.9"
   },
   "require-dev": {
