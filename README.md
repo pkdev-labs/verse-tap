@@ -58,10 +58,12 @@ try {
 }
 ```
 
-`fetchHtml()` options default to verse numbers and headings on, footnotes off.
+`fetchHtml()` options default to verse numbers and headings on, footnotes off. It returns the
+provider's HTML unchanged, not sanitized, so treat it as markup from ESV or API.Bible when you
+render it unescaped.
 
-`ClientFactory::make()` is declared to return `VerseFetcherInterface`. Both concrete fetchers
-also implement `HtmlVerseFetcherInterface`, so check for it if your static analysis asks.
+`ClientFactory::make()` returns `VerseFetcherInterface&HtmlVerseFetcherInterface`, so both
+`fetch()` and `fetchHtml()` are available on whatever it builds.
 
 You can skip the factory and wire a fetcher yourself. Each client takes an optional
 `GuzzleHttp\Client` as its last argument, which is how the tests mock HTTP:
@@ -85,11 +87,17 @@ expects. A whole chapter goes to the chapters endpoint; a verse or range goes to
 | Chapter | `Psalm 23` |
 | Verse | `John 3:16` |
 | Range in one chapter | `John 3:16-18` |
-| Range across chapters | `John 3:16-4:2` |
+| Range across chapters | `John 3:16-4:2`, `John 3-4:2` |
+| Single-chapter book | `Jude 3` (verse 3), `Jude 3-5`, `Jude 1` (the whole chapter) |
 | Numbered book | `1 John 2:1`, `First John 1:9`, `II Kings 4` |
 | Abbreviation | `Rom 8:28`, `Gen 1:1` |
 
-All 66 books are recognized, with common abbreviations.
+All 66 books are recognized, with common abbreviations. In Obadiah, Philemon, 2 John, 3 John
+and Jude, a lone number above 1 is a verse; a lone `1` is the whole chapter.
+
+A range of whole chapters with no end verse, such as `John 3-4`, throws `VerseFetchException`:
+API.Bible addresses passages verse to verse, and the last verse of a chapter is not known
+locally.
 
 ## Configuration
 
@@ -103,7 +111,7 @@ All 66 books are recognized, with common abbreviations.
 | Thrown | When |
 |---|---|
 | `InvalidArgumentException` | `make()` for a non-ESV version without `api_key` or `bible_id` |
-| `PkDev\VerseClient\Exceptions\VerseFetchException` | API.Bible `fetch()` or `fetchHtml()`, and ESV `fetchHtml()`, on a failed request (including a non-2xx response), an empty passage, or (API.Bible only) a reference it cannot parse or an unknown book |
+| `PkDev\VerseClient\Exceptions\VerseFetchException` | API.Bible `fetch()` or `fetchHtml()`, and ESV `fetchHtml()`, on a failed request (including a non-2xx response), an empty passage, or (API.Bible only) a reference it cannot parse, an unknown book, or a chapter range with no end verse |
 
 `VerseFetchException` extends `RuntimeException`.
 
@@ -117,21 +125,36 @@ composer install
 composer test
 ```
 
-The suite uses Guzzle mock handlers, except `tests/Feature/VerseFetchTest.php`, which calls the
-live ESV API and needs `ESV_API_TOKEN` set in the environment.
+The suite uses Guzzle mock handlers and runs offline. The one test that calls the live ESV API,
+`tests/Feature/VerseFetchTest.php`, is in the `live` group, which `phpunit.xml.dist` excludes by
+default. Run it with a token in the environment; without one it skips:
 
-The repo also ships a `Dockerfile` and `docker-compose.yml` (one `php` service with Composer and
-Xdebug, which listens on host port 9005):
+```bash
+ESV_API_TOKEN=<your token> composer test -- --group live
+```
+
+Static analysis and formatting:
+
+```bash
+composer analyze           # PHPStan, level 8
+vendor/bin/pint --test     # Pint, house pint.json
+```
+
+CI runs the suite on PHP 8.3, 8.4 and 8.5, plus one job on the lowest dependency versions
+`composer.json` allows, then PHPStan and Pint. It never runs the live group.
+
+The repo also ships a `Dockerfile` and `docker-compose.yml` (one `php` service on PHP 8.3 with
+Composer and Xdebug, which listens on host port 9005). The compose file passes `ESV_API_TOKEN`
+through from your shell:
 
 ```bash
 docker compose up -d --build
 docker compose exec php composer install
-docker compose exec -e ESV_API_TOKEN=<your token> php composer test
+docker compose exec php composer test
+ESV_API_TOKEN=<your token> docker compose up -d
+docker compose exec php composer test -- --group live
 ```
-
-The image is currently built on `php:8.2-cli`, below this package's PHP 8.3 floor, so the
-container needs its base image raised to 8.3 before `composer install` will resolve.
 
 ## License
 
-MIT, as declared in `composer.json`.
+MIT. See [LICENSE](LICENSE).
