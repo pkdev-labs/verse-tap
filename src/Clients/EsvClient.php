@@ -8,13 +8,12 @@ use PkDev\VerseClient\Exceptions\VerseFetchException;
 
 class EsvClient
 {
-    private Client $http;
+    private readonly Client $http;
 
-    private string $token;
-
-    public function __construct(string $token, ?Client $http = null)
-    {
-        $this->token = $token;
+    public function __construct(
+        #[\SensitiveParameter] private readonly string $token,
+        ?Client $http = null,
+    ) {
         $this->http = $http ?? new Client([
             'base_uri' => 'https://api.esv.org/v3/',
             'timeout' => 10.0,
