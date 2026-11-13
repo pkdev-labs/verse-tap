@@ -1,0 +1,8 @@
+{
+    "preset": "laravel",
+    "exclude": ["bootstrap/cache"],
+    "rules": {
+        "not_operator_with_successor_space": false,
+        "braces_position": false
+    }
+}
