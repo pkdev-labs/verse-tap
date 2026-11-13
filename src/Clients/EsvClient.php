@@ -8,15 +8,15 @@ use PkDev\VerseClient\Exceptions\VerseFetchException;
 
 class EsvClient
 {
-    private Client $http;
-    private string $token;
+    private readonly Client $http;
 
-    public function __construct(string $token, ?Client $http = null)
-    {
-        $this->token = $token;
-        $this->http  = $http ?? new Client([
+    public function __construct(
+        #[\SensitiveParameter] private readonly string $token,
+        ?Client $http = null,
+    ) {
+        $this->http = $http ?? new Client([
             'base_uri' => 'https://api.esv.org/v3/',
-            'timeout'  => 10.0,
+            'timeout' => 10.0,
         ]);
     }
 
@@ -25,13 +25,13 @@ class EsvClient
         try {
             $response = $this->http->get('passage/text', [
                 'query' => [
-                    'q'                          => $reference,
-                    'include-headings'          => 'false',
-                    'include-footnotes'         => 'false',
-                    'include-verse-numbers'     => 'false',
-                    'include-short-copyright'   => 'false',
-                    'include-passage-references'=> 'false',
-                    'indent-poetry'             => 'false',
+                    'q' => $reference,
+                    'include-headings' => 'false',
+                    'include-footnotes' => 'false',
+                    'include-verse-numbers' => 'false',
+                    'include-short-copyright' => 'false',
+                    'include-passage-references' => 'false',
+                    'indent-poetry' => 'false',
                 ],
                 'headers' => [
                     'Authorization' => "Token {$this->token}",
@@ -39,9 +39,10 @@ class EsvClient
             ]);
 
             $data = json_decode((string) $response->getBody(), true);
+
             return trim($data['passages'][0] ?? 'Verse not found');
         } catch (GuzzleException $e) {
-            return 'Error: ' . $e->getMessage();
+            return 'Error: '.$e->getMessage();
         }
     }
 
@@ -49,7 +50,7 @@ class EsvClient
      * Display-ready HTML for a reference — verse numbers and headings preserved
      * for a reader UI. Unlike {@see verse()}, this throws on failure.
      *
-     * @param array<string, mixed> $options verseNumbers/headings/footnotes booleans
+     * @param  array<string, mixed>  $options  verseNumbers/headings/footnotes booleans
      *
      * @throws VerseFetchException
      */
@@ -60,14 +61,14 @@ class EsvClient
         try {
             $response = $this->http->get('passage/html', [
                 'query' => [
-                    'q'                           => $reference,
-                    'include-verse-numbers'       => $bool($options['verseNumbers'] ?? null, true),
-                    'include-headings'            => $bool($options['headings'] ?? null, true),
-                    'include-footnotes'           => $bool($options['footnotes'] ?? null, false),
-                    'include-passage-references'  => 'false',
-                    'include-audio-link'          => 'false',
-                    'include-book-titles'         => 'false',
-                    'include-chapter-numbers'     => 'false',
+                    'q' => $reference,
+                    'include-verse-numbers' => $bool($options['verseNumbers'] ?? null, true),
+                    'include-headings' => $bool($options['headings'] ?? null, true),
+                    'include-footnotes' => $bool($options['footnotes'] ?? null, false),
+                    'include-passage-references' => 'false',
+                    'include-audio-link' => 'false',
+                    'include-book-titles' => 'false',
+                    'include-chapter-numbers' => 'false',
                 ],
                 'headers' => [
                     'Authorization' => "Token {$this->token}",

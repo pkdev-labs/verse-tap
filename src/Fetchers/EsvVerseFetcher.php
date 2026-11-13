@@ -2,11 +2,11 @@
 
 namespace PkDev\VerseClient\Fetchers;
 
-use PkDev\VerseClient\Clients;
+use PkDev\VerseClient\Clients\EsvClient;
 
 class EsvVerseFetcher implements HtmlVerseFetcherInterface, VerseFetcherInterface
 {
-    public function __construct(private Clients\EsvClient $client) {}
+    public function __construct(private readonly EsvClient $client) {}
 
     public function fetch(string $reference): string
     {

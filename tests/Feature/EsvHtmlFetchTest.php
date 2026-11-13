@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use PkDev\VerseClient\Clients\EsvClient;
@@ -14,14 +15,14 @@ use PkDev\VerseClient\Fetchers\EsvVerseFetcher;
 
 class EsvHtmlFetchTest extends TestCase
 {
-    /** @var array<int, array{request: \GuzzleHttp\Psr7\Request}> */
+    /** @var array<int, array{request: Request}> */
     private array $history = [];
 
     private function fetcher(Response $response): EsvVerseFetcher
     {
         $this->history = [];
         $stack = HandlerStack::create(new MockHandler([$response]));
-        $stack->push(Middleware::history($this->history));
+        $stack->push(Middleware::history($this->history)); // @phpstan-ignore assign.propertyType (Guzzle types the by-reference container as array|ArrayAccess)
 
         $http = new Client(['handler' => $stack, 'base_uri' => 'https://api.esv.org/v3/']);
 

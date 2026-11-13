@@ -2,6 +2,8 @@
 
 namespace PkDev\VerseClient\Fetchers;
 
+use PkDev\VerseClient\Exceptions\VerseFetchException;
+
 /**
  * A fetcher that can return display-ready HTML for a reference — verse numbers
  * and section headings preserved — suitable for a reader UI. Distinct from the
@@ -15,7 +17,7 @@ interface HtmlVerseFetcherInterface
      * @param  array<string, mixed>  $options  Provider-agnostic display hints,
      *                                         e.g. ['verseNumbers' => true, 'headings' => true, 'footnotes' => false].
      *
-     * @throws \PkDev\VerseClient\Exceptions\VerseFetchException
+     * @throws VerseFetchException
      */
     public function fetchHtml(string $reference, array $options = []): string;
 }

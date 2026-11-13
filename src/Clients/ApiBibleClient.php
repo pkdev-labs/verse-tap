@@ -14,11 +14,11 @@ use PkDev\VerseClient\Support\BibleReference;
  */
 class ApiBibleClient
 {
-    private Client $http;
+    private readonly Client $http;
 
     public function __construct(
-        private string $apiKey,
-        private string $bibleId,
+        #[\SensitiveParameter] private readonly string $apiKey,
+        private readonly string $bibleId,
         ?Client $http = null,
     ) {
         $this->http = $http ?? new Client([
@@ -67,6 +67,6 @@ class ApiBibleClient
             throw new VerseFetchException("API.Bible returned no content for \"{$reference}\".");
         }
 
-        return $html ? trim($content) : trim(preg_replace('/\s+/', ' ', $content));
+        return $html ? trim($content) : trim((string) preg_replace('/\s+/', ' ', $content));
     }
 }

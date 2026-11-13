@@ -10,7 +10,7 @@ use PkDev\VerseClient\Clients\ApiBibleClient;
  */
 class ApiBibleVerseFetcher implements HtmlVerseFetcherInterface, VerseFetcherInterface
 {
-    public function __construct(private ApiBibleClient $client) {}
+    public function __construct(private readonly ApiBibleClient $client) {}
 
     public function fetch(string $reference): string
     {

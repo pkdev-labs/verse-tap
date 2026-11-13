@@ -1,9 +1,14 @@
 {
   "name": "pkdev/verse-tap",
-  "description": "Bible Verse Client developed by PkDev",
+  "description": "PHP client for Bible verses and passages from the ESV API and API.Bible, as text or HTML",
   "type": "library",
   "license": "MIT",
-  "keywords": ["bible", "verse"],
+  "keywords": ["bible", "verse", "esv", "api.bible", "scripture"],
+  "authors": [
+    {
+      "name": "Phil Konsor"
+    }
+  ],
   "autoload": {
     "psr-4": {
       "PkDev\\VerseClient\\": "src/"
@@ -12,11 +17,12 @@
   "require": {
     "php": "^8.3",
     "ext-openssl": "*",
-    "pkdev/traits": "^2.0",
-    "guzzlehttp/guzzle": "^7.9"
+    "guzzlehttp/guzzle": "^7.15.2"
   },
   "require-dev": {
-    "phpunit/phpunit": "^12.0"
+    "phpunit/phpunit": "^12.0",
+    "phpstan/phpstan": "^2.2",
+    "laravel/pint": "^1.32"
   },
   "autoload-dev": {
     "psr-4": {
@@ -25,11 +31,12 @@
   },
   "scripts": {
     "test": "vendor/bin/phpunit tests",
-    "test-coverage": "vendor/bin/phpunit tests --coverage-html coverage"
+    "test-coverage": "vendor/bin/phpunit tests --coverage-html coverage",
+    "analyze": "vendor/bin/phpstan analyse"
   },
   "minimum-stability": "stable",
   "support": {
-    "issues": "https://github.com/pkdev-labs/verse-client/issues",
-    "source": "https://github.com/pkdev-labs/verse-client"
+    "issues": "https://github.com/pkdev-labs/verse-tap/issues",
+    "source": "https://github.com/pkdev-labs/verse-tap"
   }
 }

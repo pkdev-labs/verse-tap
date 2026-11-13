@@ -1,6 +1,6 @@
 services:
   php:
-    image: php:8.2-cli
+    image: verse-tap-php
     container_name: versecli
     working_dir: /app
     volumes:
@@ -12,6 +12,7 @@ services:
       XDEBUG_MODE: debug,develop,coverage
       XDEBUG_START_WITH_REQUEST: yes
       XDEBUG_CLIENT_HOST: host.docker.internal
+      ESV_API_TOKEN: ${ESV_API_TOKEN:-}
     ports:
       - "9005:9003"  # Map external 9005 to internal 9003
     tty: true

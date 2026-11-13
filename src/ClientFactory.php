@@ -7,6 +7,7 @@ use PkDev\VerseClient\Clients\ApiBibleClient;
 use PkDev\VerseClient\Clients\EsvClient;
 use PkDev\VerseClient\Fetchers\ApiBibleVerseFetcher;
 use PkDev\VerseClient\Fetchers\EsvVerseFetcher;
+use PkDev\VerseClient\Fetchers\HtmlVerseFetcherInterface;
 use PkDev\VerseClient\Fetchers\VerseFetcherInterface;
 
 class ClientFactory
@@ -18,7 +19,7 @@ class ClientFactory
      *
      * @param  array{token?: string, api_key?: string, bible_id?: string}  $config
      */
-    public static function make(string $version, array $config = []): VerseFetcherInterface
+    public static function make(string $version, array $config = []): VerseFetcherInterface&HtmlVerseFetcherInterface
     {
         $version = strtolower($version);
 

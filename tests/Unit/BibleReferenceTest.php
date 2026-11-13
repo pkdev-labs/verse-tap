@@ -26,6 +26,16 @@ class BibleReferenceTest extends TestCase
             'abbreviation' => ['Rom 8:28', 'ROM.8.28', false],
             'song of solomon' => ['Song of Solomon 1:1', 'SNG.1.1', false],
             'psalms plural' => ['Psalms 119:105', 'PSA.119.105', false],
+            'chapter into a verse' => ['John 3-4:2', 'JHN.3.1-JHN.4.2', false],
+            'single-chapter book, whole chapter' => ['Jude 1', 'JUD.1', true],
+            'single-chapter book, verse' => ['Jude 3', 'JUD.1.3', false],
+            'single-chapter book, verse range' => ['Jude 3-5', 'JUD.1.3-JUD.1.5', false],
+            'single-chapter book, range from verse 1' => ['Jude 1-4', 'JUD.1.1-JUD.1.4', false],
+            'single-chapter book, chapter and verse' => ['Jude 1:3', 'JUD.1.3', false],
+            'philemon verse' => ['Philemon 4', 'PHM.1.4', false],
+            'third john verse' => ['3 John 2', '3JN.1.2', false],
+            'obadiah verse' => ['Obadiah 15', 'OBA.1.15', false],
+            'second john verse' => ['2 John 6', '2JN.1.6', false],
         ];
     }
 
@@ -41,6 +51,24 @@ class BibleReferenceTest extends TestCase
     public function test_isaiah_is_not_treated_as_a_roman_numeral_prefix(): void
     {
         $this->assertSame('ISA.40.31', BibleReference::toApiId('Isaiah 40:31')['id']);
+    }
+
+    public function test_a_chapter_range_throws_instead_of_returning_one_chapter(): void
+    {
+        $this->expectException(VerseFetchException::class);
+        $this->expectExceptionMessage('Chapter ranges are not supported: John 3-4');
+        BibleReference::toApiId('John 3-4');
+    }
+
+    public function test_a_chapter_range_parses_its_end_chapter(): void
+    {
+        $parsed = BibleReference::parse('John 3-4');
+
+        $this->assertSame(3, $parsed['chapter']);
+        $this->assertSame(4, $parsed['endChapter']);
+        $this->assertNull($parsed['verseStart']);
+        $this->assertNull($parsed['verseEnd']);
+        $this->assertFalse($parsed['isChapter']);
     }
 
     public function test_unknown_book_throws(): void
