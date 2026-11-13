@@ -107,7 +107,7 @@ class BibleReference
         $chapter = (int) $m[2];
         $verseStart = isset($m[3]) && $m[3] !== '' ? (int) $m[3] : null;
         $endChapter = isset($m[4]) && $m[4] !== '' ? (int) $m[4] : null;
-        $verseEnd = isset($m[5]) && $m[5] !== '' ? (int) $m[5] : null;
+        $verseEnd = isset($m[5]) ? (int) $m[5] : null;
 
         return [
             'book' => $book,

@@ -22,7 +22,7 @@ class ApiBibleFetchTest extends TestCase
     {
         $this->history = [];
         $stack = HandlerStack::create(new MockHandler([$response]));
-        $stack->push(Middleware::history($this->history));
+        $stack->push(Middleware::history($this->history)); // @phpstan-ignore assign.propertyType (Guzzle types the by-reference container as array|ArrayAccess)
 
         $http = new Client(['handler' => $stack, 'base_uri' => 'https://rest.api.bible/v1/']);
 

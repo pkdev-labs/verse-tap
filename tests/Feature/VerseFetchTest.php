@@ -18,7 +18,6 @@ class VerseFetchTest extends TestCase
         $client = ClientFactory::make('esv');
         $result = $client->fetch('John 3:16');
 
-        $this->assertIsString($result);
         $this->assertNotEmpty($result);
         $this->assertStringContainsString('God', $result);
     }
