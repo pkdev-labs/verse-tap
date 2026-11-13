@@ -1,10 +1,10 @@
-FROM php:8.2-cli
+FROM php:8.3-cli
 
 RUN apt-get update && apt-get install -y \
     git unzip curl libzip-dev pkg-config libssl-dev \
     && docker-php-ext-install zip
 
-# 🧠 Conditional Xdebug install and enable
+# Conditional Xdebug install and enable
 RUN if ! php -m | grep -q xdebug; then \
         pecl install xdebug && docker-php-ext-enable xdebug; \
     else \
