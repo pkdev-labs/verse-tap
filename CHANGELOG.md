@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   from stack traces that include arguments.
 - Package metadata: a description that says what the package does, more keywords, and an
   author.
+- `guzzlehttp/guzzle` now requires `^7.15.2`, the first release clear of the published
+  advisories against earlier 7.x versions.
 
 ### Fixed
 - `BibleReference` no longer truncates a chapter range such as `John 3-4` to its first
